@@ -19,7 +19,9 @@ class RedisMixin(object):
         # TODO: use REDIS_URL
         host = self.crawler.settings.get('REDIS_HOST', 'localhost')
         port = self.crawler.settings.get('REDIS_PORT', 6379)
-        self.server = redis.Redis(host, port)
+        db = self.crawler.settings.get('REDIS_DB', 0)
+        
+        self.server = redis.Redis(host, port, db)
         # idle signal is called when the spider has no requests left,
         # that's when we will schedule new requests from redis queue
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
